@@ -2,6 +2,8 @@ package sicp.exercises
 
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.annotation.tailrec
+
 class Chapter01Spec extends FlatSpec with Matchers {
 
   behavior of "exercise 1.3"
@@ -70,4 +72,37 @@ class Chapter01Spec extends FlatSpec with Matchers {
     result shouldEqual 0
   }
 
+  behavior of "exercise 1.11"
+
+  def solution_1_11_rec(n: Int): Int = {
+    if (n < 3)
+      n
+    else
+      solution_1_11_rec(n - 1) + 2 * solution_1_11_rec(n - 2) + 3 * solution_1_11_rec(n - 3)
+  }
+
+  def solution_1_11_iter(n: Int): Int = {
+
+    // Auxiliary function: arguments are at the end a = f(n-2), b = f(n-1), c = f(n), count = n
+    @tailrec
+    def g(a: Int, b: Int, c: Int, count: Int): Int = {
+      if (count < 3)
+        c
+      else g(b, c, c + 2 * b + 3 * a, count - 1)
+    }
+
+    g(0, 1, 2, n)
+  }
+
+  it should "compute using recursion" in {
+    solution_1_11_rec(2) shouldEqual 2
+    solution_1_11_rec(3) shouldEqual 4
+    solution_1_11_rec(10) shouldEqual 1892
+  }
+
+  it should "compute using iteration" in {
+    solution_1_11_iter(2) shouldEqual 2
+    solution_1_11_iter(3) shouldEqual 4
+    solution_1_11_iter(10) shouldEqual 1892
+  }
 }
