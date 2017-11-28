@@ -228,4 +228,27 @@ class Chapter01Spec extends FlatSpec with Matchers {
     result shouldEqual 1.0 / 6.0 +- 1e-9
   }
 
+  behavior of "exercise 1.34"
+
+  it should "fail to compile function f" in {
+    def f[A](g: Int ⇒ A) = g(2)
+
+    "f(f)" shouldNot compile
+  }
+
+  behavior of "exercise 1.41"
+
+  it should "define function `double`" in {
+    def double[A](f: A ⇒ A) = (x: A) ⇒ f(f(x))
+
+    val inc: Int ⇒ Int = _ + 1
+
+    double[Int](inc)(5) shouldEqual 2 + 5
+
+    double(double[Int])(inc)(5) shouldEqual 4 + 5
+
+    double(double(double[Int]))(inc)(5) shouldEqual 16 + 5
+
+    double(double(double(double[Int])))(inc)(5) shouldEqual 256 + 5
+  }
 }
